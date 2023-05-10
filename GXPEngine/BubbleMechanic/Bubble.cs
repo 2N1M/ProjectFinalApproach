@@ -1,9 +1,10 @@
 ﻿using System;
 using GXPEngine;
 
-public class Planet
+public class Bubble
 {
-	public Planet()
+
+	public Bubble()
 	{
 	}
 }

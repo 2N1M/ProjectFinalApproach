@@ -1,15 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using GXPEngine;
 
 public class Level : GameObject
 {
-	public Player player;
+	EasyDraw background;
 
-
-
-	public Level()
+	public Level(int width, int height)
 	{
-
-		
+		background = new EasyDraw(width, height);
 	}
 }

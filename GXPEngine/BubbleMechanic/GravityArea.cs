@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal class LevelManager
+namespace GXPEngine.BubbleMechanic
 {
-
+    internal class GravityArea
+    {
+    }
 }

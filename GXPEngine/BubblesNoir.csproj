@@ -40,10 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BubbleMechanic\GravityArea.cs" />
+    <Compile Include="BubbleMechanic\InsideBubble.cs" />
+    <Compile Include="BubbleMechanic\OutsideBubble.cs" />
+    <Compile Include="CustomManagers\AudioManager.cs" />
     <Compile Include="Entities\Boss.cs" />
     <Compile Include="CustomManagers\EntityManager.cs" />
     <Compile Include="CustomManagers\LevelManager.cs" />
     <Compile Include="EntityData.cs" />
+    <Compile Include="HUD.cs" />
     <Compile Include="PhysicsEngine\BoxCollider.cs" />
     <Compile Include="PhysicsEngine\CircleCollider.cs" />
     <Compile Include="Entities\Coin.cs" />
@@ -71,7 +76,6 @@
     <Compile Include="GXPEngine\Core\Rectangle.cs" />
     <Compile Include="GXPEngine\Core\Texture2D.cs" />
     <Compile Include="GXPEngine\Core\Transformable.cs" />
-    <Compile Include="GXPEngine\Core\Vector2.cs" />
     <Compile Include="GXPEngine\FMOD\FMOD.cs" />
     <Compile Include="GXPEngine\Managers\CollisionManager.cs" />
     <Compile Include="GXPEngine\Managers\UpdateManager.cs" />
@@ -97,9 +101,11 @@
     <Compile Include="Entities\Objects\Object.cs" />
     <Compile Include="Entities\Objects\OxygenCrystal.cs" />
     <Compile Include="Entities\Objects\Pickup.cs" />
-    <Compile Include="Planet.cs" />
+    <Compile Include="BubbleMechanic\Bubble.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Objects\Weight.cs" />
+    <Compile Include="PhysicsEngine\CollisionInfo.cs" />
+    <Compile Include="GXPEngine\Core\Vec2.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
