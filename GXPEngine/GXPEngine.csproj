@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>GXPEngine</RootNamespace>
     <AssemblyName>GXPEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -40,9 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boss.cs" />
+    <Compile Include="BoxCollider.cs" />
+    <Compile Include="CircleCollider.cs" />
+    <Compile Include="Coin.cs" />
+    <Compile Include="Collider.cs" />
+    <Compile Include="Door.cs" />
+    <Compile Include="Enemy.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
     <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
     <Compile Include="GXPEngine\AddOns\TiledLoader.cs" />
+    <Compile Include="InteractionObject.cs" />
+    <Compile Include="Key.cs" />
+    <Compile Include="Level.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="GXPEngine\Core\Canvas.cs" />
     <Compile Include="GXPEngine\Game.cs" />
@@ -81,7 +92,13 @@
     <Compile Include="GXPEngine\FMOD\FMODSoundSystem.cs" />
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
+    <Compile Include="Object.cs" />
+    <Compile Include="OxygenCrystal.cs" />
+    <Compile Include="Pickup.cs" />
+    <Compile Include="Planet.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="TestClass.cs" />
+    <Compile Include="Weight.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
