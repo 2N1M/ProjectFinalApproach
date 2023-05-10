@@ -1,22 +1,18 @@
 ﻿using System;
 using GXPEngine;
 
-public class Player: AnimationSprite
-	{
+public class Player//: AnimationSprite
+{
 
 
-	public Player() : base() 
-	
-	
+	public Player()// : base()
 	{
-		
 
 	}
 
-	void Update() { 
-	
-	
-	
+	void Update()
+	{
+
 	}
 
 

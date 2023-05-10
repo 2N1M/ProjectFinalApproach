@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>GXPEngine</RootNamespace>
     <AssemblyName>GXPEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -41,10 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Boss.cs" />
-    <Compile Include="BoxCollider.cs" />
-    <Compile Include="CircleCollider.cs" />
+    <Compile Include="PhysicsEngine\BoxCollider.cs" />
+    <Compile Include="PhysicsEngine\CircleCollider.cs" />
     <Compile Include="Coin.cs" />
-    <Compile Include="Collider.cs" />
+    <Compile Include="PhysicsEngine\Collider.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Entity.cs" />
@@ -83,7 +83,6 @@
     <Compile Include="GXPEngine\Utils\Utils.cs" />
     <Compile Include="GXPEngine\AddOns\Camera.cs" />
     <Compile Include="GXPEngine\Managers\HierarchyManager.cs" />
-    <Compile Include="GXPEngine\AddOns\Settings.cs" />
     <Compile Include="GXPEngine\AddOns\TiledMapParser.cs" />
     <Compile Include="GXPEngine\AddOns\Window.cs" />
     <Compile Include="GXPEngine\EasyDraw.cs" />
@@ -97,7 +96,6 @@
     <Compile Include="Pickup.cs" />
     <Compile Include="Planet.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="TestClass.cs" />
     <Compile Include="Weight.cs" />
   </ItemGroup>
   <ItemGroup>
