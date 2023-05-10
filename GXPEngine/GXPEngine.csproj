@@ -40,19 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Boss.cs" />
+    <Compile Include="Entities\Boss.cs" />
+    <Compile Include="CustomManagers\EntityManager.cs" />
+    <Compile Include="CustomManagers\LevelManager.cs" />
+    <Compile Include="EntityData.cs" />
     <Compile Include="PhysicsEngine\BoxCollider.cs" />
     <Compile Include="PhysicsEngine\CircleCollider.cs" />
-    <Compile Include="Coin.cs" />
+    <Compile Include="Entities\Coin.cs" />
     <Compile Include="PhysicsEngine\Collider.cs" />
-    <Compile Include="Door.cs" />
-    <Compile Include="Enemy.cs" />
-    <Compile Include="Entity.cs" />
+    <Compile Include="Entities\Objects\Door.cs" />
+    <Compile Include="Entities\Enemy.cs" />
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
     <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
     <Compile Include="GXPEngine\AddOns\TiledLoader.cs" />
-    <Compile Include="InteractionObject.cs" />
-    <Compile Include="Key.cs" />
+    <Compile Include="Entities\Objects\InteractionObject.cs" />
+    <Compile Include="Entities\Objects\Key.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="GXPEngine\Core\Canvas.cs" />
@@ -91,12 +94,12 @@
     <Compile Include="GXPEngine\FMOD\FMODSoundSystem.cs" />
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
-    <Compile Include="Object.cs" />
-    <Compile Include="OxygenCrystal.cs" />
-    <Compile Include="Pickup.cs" />
+    <Compile Include="Entities\Objects\Object.cs" />
+    <Compile Include="Entities\Objects\OxygenCrystal.cs" />
+    <Compile Include="Entities\Objects\Pickup.cs" />
     <Compile Include="Planet.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="Weight.cs" />
+    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Objects\Weight.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
