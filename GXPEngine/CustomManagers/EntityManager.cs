@@ -55,7 +55,6 @@ public class EntityManager
 
         return entity;
     }
-
     /// <summary>
     /// EasyDraw CircleCollider Entity
     /// </summary>

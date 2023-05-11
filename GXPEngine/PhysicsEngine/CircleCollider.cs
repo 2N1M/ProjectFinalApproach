@@ -93,7 +93,7 @@ namespace GXPEngine.PhysicsEngine
                 //Console.WriteLine("a: {0}, \nb: {1}, \nc: {2}, \nd: {3} \n ", a, b, c, d);
 
                 float t = (-b - Mathf.Sqrt(d)) / (2 * a);
-                float t2 = (-b + Mathf.Sqrt(d)) / (2 * a);
+                //float t2 = (-b + Mathf.Sqrt(d)) / (2 * a);
 
                 DrawPOICircle(owner.CalculatePOI(t));
                 //DrawPOICircle(owner.CalculatePOI(t2));

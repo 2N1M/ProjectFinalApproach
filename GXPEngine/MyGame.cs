@@ -16,11 +16,11 @@ public class MyGame : Game
 
         //Texture2D texture = new Texture2D("circle.png");
 		Entity entity1 = EntityManager.Instance.CreateEntity(new Vec2(width/2-100, height/2), 30);
-		entity1.Velocity = new Vec2(1, 0);
+		entity1.Velocity = new Vec2(1, 1);
 		AddChild(entity1);
 
         Entity entity2 = EntityManager.Instance.CreateEntity(new Vec2(width / 2 + 100, height / 2), 40);
-        entity2.Velocity = new Vec2(-1, 0);
+        entity2.Velocity = new Vec2(-1, 1);
 		AddChild(entity2);
 	}
 
