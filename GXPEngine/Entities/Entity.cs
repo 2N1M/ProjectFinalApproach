@@ -6,53 +6,61 @@ using GXPEngine;
 using GXPEngine.Core;
 using GXPEngine.PhysicsEngine;
 
-public enum Collider
-{
-    Box,
-    Line,
-    Circle,
-    Trigger
-}
 
 public class Entity : RigidBody
 {
     EntityData entityData;
-    public new Color shapeColor;
+    public Color shapeColor;
     EasyDraw entityShape;
 
-    public Entity(Texture2D spriteSheet = null, int cols = 1, int rows = 1, int frames = -1) : base(spriteSheet, cols, rows, frames)
+    public Entity(Texture2D spriteSheet = null, int cols = 1, int rows = 1, int frames = -1, int radius = 0, Color? color = null, bool easyDraw = false) : base(spriteSheet, cols, rows, frames)
     {
         entityData = new EntityData();
+
+        this.easyDraw = easyDraw;
+        this.radius = radius;
+
+        if (easyDraw)
+        {
+            shapeColor = color ?? Color.FromArgb(Utils.Random(0, 255), Utils.Random(0, 255), Utils.Random(0, 255));
+            entityShape = new EasyDraw(radius * 2 + 1, radius * 2 + 1);
+            entityShape.SetOriginCenter();
+            AddChild(entityShape);
+        }        
     }
-    
-    public Entity(float radius, Color? color = null) : base(spriteSheet, cols, rows, frames)
+
+    internal override void DrawShape()
     {
-        entityData = new EntityData();       
-
-        shapeColor = color ?? Color.FromArgb(Utils.Random(0, 255), Utils.Random(0, 255), Utils.Random(0, 255));
+        //entityShape.ClearTransparent();
+        entityShape.ShapeAlign(CenterMode.Center, CenterMode.Center);
+        if (collider is CircleCollider)
+        {
+            entityShape.Fill(shapeColor);
+            entityShape.NoStroke();
+            entityShape.Ellipse(width / 2, height / 2, 2 * radius, 2 * radius);
+        }
+        else if (collider is GXPEngine.PhysicsEngine.BoxCollider)
+        {
+            entityShape.Fill(shapeColor);
+            entityShape.NoStroke();
+            entityShape.Rect(0, 0, width, height);
+        }
     }
 
-    public void Draw()
-    {
-        entityShape.Fill(shapeColor);
-        entityShape.NoStroke();
-        entityShape.Ellipse(width / 2, height / 2, 2 * radius, 2 * radius);
-    }
-
-    public void SetCollider(Collider colliderType)
+    public void SetCollider(ColliderType colliderType)
     {
         switch (colliderType)
         {
-            case Collider.Box:
+            case ColliderType.Box:
                 collider = new GXPEngine.PhysicsEngine.BoxCollider(this);
                 break;
-            case Collider.Line:
+            case ColliderType.Line:
                 collider = new LineCollider(this);
                 break;
-            case Collider.Circle:
+            case ColliderType.Circle:
                 collider = new CircleCollider(this);
                 break;
-            case Collider.Trigger:
+            case ColliderType.Trigger:
                 break;
             default:
                 break;

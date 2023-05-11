@@ -1,9 +1,17 @@
-﻿using GXPEngine.PhysicsEngine;
+﻿using GXPEngine.Core;
+using GXPEngine.PhysicsEngine;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+enum EntityType
+{
+    EasyDraw,
+    Texture,
+}
 
 public class EntityManager
 {
@@ -24,6 +32,45 @@ public class EntityManager
 
     List<Entity> entityList = new List<Entity>();
 
+    /// <summary>
+    /// Textured CircleCollider Entity
+    /// </summary>
+    /// <param name="texture"></param>
+    /// <param name="radius"></param>
+    /// <param name="cols"></param>
+    /// <param name="rows"></param>
+    /// <param name="frames"></param>
+    /// <returns></returns>
+    public Entity CreateEntity(Vec2 position, Texture2D texture, int radius = -1, int cols = 1, int rows = 1, int frames = -1)
+    {
+        if (radius == -1)
+        {
+            radius = texture.width / 2;
+        }
+        Entity entity = new Entity(texture, cols, rows, frames, radius);
+        entity.SetCollider(ColliderType.Circle);
+        entityList.Add(entity);
+        entity.Position= position;
+
+        return entity;
+    }
+
+    /// <summary>
+    /// EasyDraw CircleCollider Entity
+    /// </summary>
+    /// <param name="pRadius"></param>
+    /// <returns></returns>
+    public Entity CreateEntity(Vec2 position, int pRadius, Color? pColor = null)
+    {
+        Texture2D empty = new Texture2D((int)pRadius * 2, (int)pRadius * 2);
+        Entity entity = new Entity(empty, radius: pRadius, color: pColor, easyDraw: true);
+        entity.SetCollider(ColliderType.Circle);
+        entityList.Add(entity);
+        entity.Position= position;
+
+        return entity;
+    }
+
     public List<Entity> GetEntities()
     {
         return entityList;
@@ -40,7 +87,7 @@ public class EntityManager
         if (!_paused)
         {
             if (_stepped)
-            { // move everything step-by-step: in one frame, only one mover moves
+            { // move everything step-by-step: in one frame, only one entity moves
                 _stepIndex++;
 
                 if (_stepIndex >= entityList.Count)
@@ -54,7 +101,7 @@ public class EntityManager
                 }
             }
             else
-            { // move all movers every frame
+            { // move all entities every frame
                 foreach (Entity entity in entityList)
                 {
                     if (entity.GetType() != typeof(StaticObject))

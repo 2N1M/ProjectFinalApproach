@@ -239,20 +239,26 @@ namespace GXPEngine
 			_bounds.x = -x;
 			_bounds.y = -y;
 		}
-		
-		//------------------------------------------------------------------------------------------------------------------------
-		//														Mirror
-		//------------------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// This function can be used to enable mirroring for the sprite in either x or y direction.
-		/// </summary>
-		/// <param name='mirrorX'>
-		/// If set to <c>true</c> to enable mirroring in x direction.
-		/// </param>
-		/// <param name='mirrorY'>
-		/// If set to <c>true</c> to enable mirroring in y direction.
-		/// </param>
-		public void Mirror(bool mirrorX, bool mirrorY) {
+
+        public void SetOriginCenter()
+        {
+            _bounds.x = -width/2;
+            _bounds.y = -height/2;
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------
+        //														Mirror
+        //------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// This function can be used to enable mirroring for the sprite in either x or y direction.
+        /// </summary>
+        /// <param name='mirrorX'>
+        /// If set to <c>true</c> to enable mirroring in x direction.
+        /// </param>
+        /// <param name='mirrorY'>
+        /// If set to <c>true</c> to enable mirroring in y direction.
+        /// </param>
+        public void Mirror(bool mirrorX, bool mirrorY) {
 			_mirrorX = mirrorX;
 			_mirrorY = mirrorY;
 			setUVs();

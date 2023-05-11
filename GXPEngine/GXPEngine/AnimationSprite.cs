@@ -55,7 +55,7 @@ namespace GXPEngine
 			initializeAnimFrames(cols, rows, frames);
 		}
 		
-		public AnimationSprite (Texture2D texture, int cols, int rows, int frames=-1, bool keepInCache=false, bool addCollider=true) : base(texture.filename,keepInCache,addCollider)
+		public AnimationSprite (Texture2D texture, int cols, int rows, int frames=-1, bool keepInCache=false, bool addCollider=true) : base(texture, addCollider)
 		{
 			name = texture.filename;
 			initializeAnimFrames(cols, rows, frames);

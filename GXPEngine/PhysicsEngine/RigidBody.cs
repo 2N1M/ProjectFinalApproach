@@ -8,11 +8,19 @@ using System.Threading.Tasks;
 
 namespace GXPEngine.PhysicsEngine
 {
+    public enum ColliderType
+    {
+        Box,
+        Line,
+        Circle,
+        Trigger
+    }
+
     public class RigidBody : AnimationSprite
     {
         public new Collider collider;
 
-        public float radius;
+        public int radius;
 
         public static float bounciness = 0.98f;
         public static Vec2 acceleration = new Vec2(0, 0);
@@ -26,6 +34,8 @@ namespace GXPEngine.PhysicsEngine
 
         SoundChannel collisionSoundChannel;
 
+        internal bool easyDraw = false;
+
         public float Mass
         {
             get
@@ -38,8 +48,7 @@ namespace GXPEngine.PhysicsEngine
         {
             velocityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 10);
             AddChild(velocityIndicator);
-
-            SetOrigin(width / 2, height / 2);
+            SetOriginCenter();
         }
 
         public void Step()
@@ -47,7 +56,13 @@ namespace GXPEngine.PhysicsEngine
             oldPosition = Position;
 
             Move();
+            if (easyDraw)
+                DrawShape();
             ShowDebugInfo();
+        }
+        internal virtual void DrawShape()
+        {
+            // Empty
         }
         void ShowDebugInfo()
         {
@@ -122,7 +137,7 @@ namespace GXPEngine.PhysicsEngine
 
             POICollisionResolve(collision);
             Bounce(collision);
-            CollisionSound(collision);
+            //CollisionSound(collision);
         }
 
         void POICollisionResolve(CollisionInfo collision)
