@@ -80,7 +80,7 @@ namespace GXPEngine
 		}
 
 		public Vec2 Velocity { get; set; }
-		public float Density { get; set; }
+		public float Density { get; set; } = 1.0f;
 
 		//------------------------------------------------------------------------------------------------------------------------
 		//														SetXY

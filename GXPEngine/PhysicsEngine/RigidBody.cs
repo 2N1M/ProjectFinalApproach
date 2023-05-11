@@ -1,5 +1,5 @@
 ﻿using GXPEngine.Core;
-using PhysicsEngine;
+using GXPEngine.PhysicsEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace GXPEngine.PhysicsEngine
 
         public int radius;
 
-        public static float bounciness = 0.98f;
+        public float bounciness = 0.98f;
         public static Vec2 acceleration = new Vec2(0, 0);
         public float frictionCoefficient = 0.02f;
         private Vec2 friction;
@@ -40,7 +40,15 @@ namespace GXPEngine.PhysicsEngine
         {
             get
             {
-                return width * height * Density;
+                switch (collider)
+                {
+                    case BoxCollider boxCollider:
+                        return width * height * Density;
+                    case CircleCollider circleCollider:
+                        return radius * radius * Density;
+                    default:
+                        return width * height * Density;
+                }
             }
         }
 
@@ -72,7 +80,7 @@ namespace GXPEngine.PhysicsEngine
         void Move() // Movement using Euler integration
         {
             if (this.GetType() != typeof(StaticObject))
-            {
+            {                
                 friction = Velocity * frictionCoefficient;
                 Velocity += acceleration + hitAccelaration + gravityDirection - friction;
 
@@ -160,7 +168,9 @@ namespace GXPEngine.PhysicsEngine
                 Entity other = collision.other;
                 float totalMass = this.Mass + other.Mass;
 
-                return (this.GetMomentum() + other.GetMomentum()) / totalMass;
+                Vec2 comVelocity = (this.GetMomentum() + other.GetMomentum()) / totalMass;
+
+                return comVelocity;
             }
         }
         Vec2 GetMomentum()
@@ -173,7 +183,7 @@ namespace GXPEngine.PhysicsEngine
             Vec2 comVelocity = GetCoMVelocity(collision); // Velocity of center of mass (weighted average of velocities)
             Vec2 normal = collision.normal;
 
-            if (collision.other.collider is CircleCollider && collision.self.collider is CircleCollider)
+            if (collision.other.GetType() != typeof(StaticObject))
             {
                 Entity other = collision.other;
                 CollisionOnLine(normal, comVelocity);
@@ -189,7 +199,7 @@ namespace GXPEngine.PhysicsEngine
         {
             Vec2 projectedVelocity = Velocity.Project(normal);
             Vec2 projectedCoMVelocity = comVelocity.Project(normal);
-
+            
             Velocity = Velocity - (1 + bounciness) * (projectedVelocity - projectedCoMVelocity);
         }
 

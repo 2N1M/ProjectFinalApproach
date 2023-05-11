@@ -1,14 +1,10 @@
-﻿using GXPEngine;
-using GXPEngine.Core;
-using GXPEngine.PhysicsEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhysicsEngine
+namespace GXPEngine.PhysicsEngine
 {
     public class CollisionManager
     {
@@ -23,8 +19,12 @@ namespace PhysicsEngine
         }
         private static CollisionManager instance;
 
-        //List<Collider> colliders = new List<Collider>();
+        List<Collider> colliderList = new List<Collider>();
 
-        
+        public List<Collider> GetColliders()
+        {
+            return colliderList;
+        }
+
     }
 }

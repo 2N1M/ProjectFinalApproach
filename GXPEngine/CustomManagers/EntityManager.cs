@@ -1,4 +1,5 @@
-﻿using GXPEngine.Core;
+﻿using GXPEngine;
+using GXPEngine.Core;
 using GXPEngine.PhysicsEngine;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ enum EntityType
 
 public class EntityManager
 {
-    bool _stepped = false;
-    bool _paused = false;
-    int _stepIndex = 0;
+    bool stepped = false;
+    bool paused = false;
+    int stepIndex = 0;
 
     public static EntityManager Instance
     {
@@ -71,6 +72,12 @@ public class EntityManager
         return entity;
     }
 
+    public void DestroyEntity(Entity entity)
+    {
+        entityList.Remove(entity);
+        entity.Destroy();
+    }
+
     public List<Entity> GetEntities()
     {
         return entityList;
@@ -82,26 +89,95 @@ public class EntityManager
         entityList.Find(x => x == entity).DamageEntity(damage);
     }
 
+    void HandleInput()
+    {
+        Game.main.targetFps = Input.GetKey(Key.SPACE) ? 5 : 60;
+        //if (Input.GetKeyDown(Key.UP))
+        //{
+        //    Ball.acceleration.SetXY(0, -1);
+        //}
+        //if (Input.GetKeyDown(Key.DOWN))
+        //{
+        //    Ball.acceleration.SetXY(0, 1);
+        //}
+        //if (Input.GetKeyDown(Key.LEFT))
+        //{
+        //    Ball.acceleration.SetXY(-1, 0);
+        //}
+        //if (Input.GetKeyDown(Key.RIGHT))
+        //{
+        //    Ball.acceleration.SetXY(1, 0);
+        //}
+        //if (Input.GetKeyDown(Key.BACKSPACE))
+        //{
+        //    Ball.acceleration.SetXY(0, 0);
+        //}
+        if (Input.GetKeyDown(Key.S))
+        {
+            stepped ^= true;
+        }
+        //if (Input.GetKeyDown(Key.D))
+        //{
+        //    Ball.drawDebugLine ^= true;
+        //}
+        //if (Input.GetKeyDown(Key.H))
+        //{
+        //    Ball.drawPOI ^= true;
+        //}
+        if (Input.GetKeyDown(Key.P))
+        {
+            paused ^= true;
+        }
+        //if (Input.GetKeyDown(Key.B))
+        //{
+        //    Ball.bounciness = 1.5f - Ball.bounciness;
+        //}
+        //if (Input.GetKeyDown(Key.W))
+        //{
+        //    Ball.wordy ^= true;
+        //}
+        //if (Input.GetKeyDown(Key.C))
+        //{
+        //    _lineContainer.graphics.Clear(Color.Transparent);
+        //}
+        //if (Input.GetKeyDown(Key.R))
+        //{
+        //    LoadScene(_startSceneNumber);
+        //}
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    if (Input.GetKeyDown(48 + i))
+        //    {
+        //        LoadScene(i);
+        //    }
+        //}
+    }
+
     public void Step()
     {
-        if (!_paused)
+        HandleInput();
+
+        if (!paused)
         {
-            if (_stepped)
+            if (stepped)
             { // move everything step-by-step: in one frame, only one entity moves
-                _stepIndex++;
+                stepIndex++;
 
-                if (_stepIndex >= entityList.Count)
+                if (stepIndex >= entityList.Count)
                 {
-                    _stepIndex = 0;
+                    stepIndex = 0;
                 }
 
-                if (entityList[_stepIndex].GetType() != typeof(StaticObject))
+                if (entityList[stepIndex].GetType() != typeof(StaticObject))
                 {
-                    entityList[_stepIndex].Step();
+                    entityList[stepIndex].Step();
                 }
+
+                MyGame._circleCointainer.graphics.Clear(Color.Transparent);
             }
             else
             { // move all entities every frame
+                MyGame._circleCointainer.graphics.Clear(Color.Transparent);
                 foreach (Entity entity in entityList)
                 {
                     if (entity.GetType() != typeof(StaticObject))

@@ -43,7 +43,7 @@ namespace GXPEngine.PhysicsEngine
         {
             return null;
         }
-        internal virtual CollisionInfo SetTimeOfImpact(CollisionInfo collision)
+        internal virtual CollisionInfo SetCollisionTimeOfImpact(CollisionInfo collision)
         {
             return null;
         }
