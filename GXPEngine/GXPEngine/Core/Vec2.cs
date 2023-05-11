@@ -71,19 +71,6 @@ namespace GXPEngine.Core
         }
 
         /// <summary>
-        /// Determines whether two circles overlap by calculating the distance between their centers and comparing it to the sum of their radii.
-        /// </summary>
-        /// <param name="c1">The center of the first circle.</param>
-        /// <param name="c2">The center of the second circle.</param>
-        /// <param name="r1">The radius of the first circle.</param>
-        /// <param name="r2">The radius of the second circle.</param>
-        /// <returns>True if the two circles overlap, otherwise false.</returns>
-        public static bool CircleOverlap(Vec2 c1, Vec2 c2, float r1, float r2)
-        {
-            return (Distance(c1, c2) < r1 + r2);
-        }
-
-        /// <summary>
         /// Scales the Vec2 to unit length.
         /// </summary>
         public void Normalize()

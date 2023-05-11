@@ -1,20 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GXPEngine;
+using GXPEngine.Core;
+using GXPEngine.PhysicsEngine;
 
-public class Entity
+public class Entity : RigidBody
 {
-    public bool isObject;
     EntityData entityData;
 
-    public Entity(bool isObject = false)
+    public Entity(Texture2D spriteSheet = null, int cols = 1, int rows = 1, int frames = -1) : base(spriteSheet, cols, rows, frames)
     {
         entityData = new EntityData();
-        this.isObject = isObject;
     }
+
+    // Circle easydraw
+    //
 
     public void DamageEntity(int damage)
     {
-        if (!isObject)
+        if (this.GetType() != typeof(Object))
         {
             entityData.Health -= damage;
         }

@@ -1,4 +1,6 @@
+using GXPEngine.Core;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 
 namespace GXPEngine 
@@ -437,10 +439,24 @@ namespace GXPEngine
 			}
 		}
 
-		/// <summary>
-		/// Draw a triangle between three points, using the current stroke and fill settings.
-		/// </summary>
-		public void Triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        public void Line(Vec2 a, Vec2 b)
+        {
+            if (_stroke)
+            {
+                graphics.DrawLine(pen, a.x, a.y, b.x, b.y);
+            }
+        }
+
+        public void LineCap(LineCap capType)
+        {
+            pen.StartCap = capType;
+            pen.EndCap = capType;
+        }
+
+        /// <summary>
+        /// Draw a triangle between three points, using the current stroke and fill settings.
+        /// </summary>
+        public void Triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
 			Polygon(x1,y1,x2,y2,x3,y3);
 		}
 

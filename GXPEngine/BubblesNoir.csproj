@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arrow.cs" />
     <Compile Include="BubbleMechanic\GravityArea.cs" />
     <Compile Include="BubbleMechanic\InsideBubble.cs" />
     <Compile Include="BubbleMechanic\OutsideBubble.cs" />
@@ -47,8 +48,10 @@
     <Compile Include="Entities\Boss.cs" />
     <Compile Include="CustomManagers\EntityManager.cs" />
     <Compile Include="CustomManagers\LevelManager.cs" />
+    <Compile Include="Entities\Objects\StaticObject.cs" />
     <Compile Include="EntityData.cs" />
     <Compile Include="HUD.cs" />
+    <Compile Include="LineSegment.cs" />
     <Compile Include="PhysicsEngine\BoxCollider.cs" />
     <Compile Include="PhysicsEngine\CircleCollider.cs" />
     <Compile Include="Entities\Coin.cs" />
@@ -106,6 +109,10 @@
     <Compile Include="Entities\Objects\Weight.cs" />
     <Compile Include="PhysicsEngine\CollisionInfo.cs" />
     <Compile Include="GXPEngine\Core\Vec2.cs" />
+    <Compile Include="GXPEngine\Utils\Timer.cs" />
+    <Compile Include="PhysicsEngine\CollisionManager.cs" />
+    <Compile Include="PhysicsEngine\LineCollider.cs" />
+    <Compile Include="PhysicsEngine\RigidBody.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
