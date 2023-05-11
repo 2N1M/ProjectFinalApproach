@@ -5,7 +5,7 @@ namespace GXPEngine.PhysicsEngine
 {
     public class BoxCollider : Collider
     {
-        public BoxCollider()
+        public BoxCollider(Entity owner) : base(owner)
         {
         }
 

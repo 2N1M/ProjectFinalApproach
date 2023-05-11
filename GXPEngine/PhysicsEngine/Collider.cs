@@ -24,8 +24,9 @@ namespace GXPEngine.PhysicsEngine
         }
         bool isTrigger = false;
 
-        public Collider()
+        public Collider(Entity owner)
 		{
+            this.owner = owner;
 		}
 
         public virtual bool HitTest(Collider other)

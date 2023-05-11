@@ -36,7 +36,7 @@ namespace GXPEngine
 
         public LineSegment(Vec2 pStart, Vec2 pEnd, Color color, uint pLineWidth = 1) : base()
         {
-            collider = new LineCollider();
+            SetCollider(Collider.Line);
             line = new EasyDraw(Game.main.width, Game.main.height);
 
             start = pStart;

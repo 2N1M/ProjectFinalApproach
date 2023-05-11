@@ -38,6 +38,8 @@ namespace GXPEngine.PhysicsEngine
         {
             velocityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 10);
             AddChild(velocityIndicator);
+
+            SetOrigin(width / 2, height / 2);
         }
 
         public void Step()
@@ -54,7 +56,7 @@ namespace GXPEngine.PhysicsEngine
         }
         void Move() // Movement using Euler integration
         {
-            if (this.GetType() != typeof(Object))
+            if (this.GetType() != typeof(StaticObject))
             {
                 friction = Velocity * frictionCoefficient;
                 Velocity += acceleration + hitAccelaration + gravityDirection - friction;

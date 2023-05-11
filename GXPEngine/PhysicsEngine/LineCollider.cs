@@ -11,7 +11,7 @@ namespace GXPEngine.PhysicsEngine
 {
     public class LineCollider : Collider
     {
-        public LineCollider()
+        public LineCollider(Entity owner) : base(owner)
         {
         }
 

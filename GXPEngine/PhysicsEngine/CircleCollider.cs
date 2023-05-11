@@ -10,7 +10,7 @@ namespace GXPEngine.PhysicsEngine
 	{
         public float radius;
 
-		public CircleCollider()
+		public CircleCollider(Entity owner) : base(owner)
 		{
 		}
 
