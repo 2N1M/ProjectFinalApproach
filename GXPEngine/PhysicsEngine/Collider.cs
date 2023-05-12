@@ -1,28 +1,16 @@
-﻿using GXPEngine;
-using GXPEngine.Core;
-using GXPEngine.PhysicsEngine;
+﻿using GXPEngine.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace GXPEngine.PhysicsEngine
 {
-	public class Collider
+    public class Collider
 	{
         internal Entity owner;
+        SoundChannel collisionSoundChannel;
 
-        public bool IsTrigger
-        {
-            get
-            {
-                return isTrigger;
-            }
-            set
-            {
-                isTrigger = value;
-            }
-        }
-        bool isTrigger = false;
+        public bool IsStatic { get; set; } = false;
 
         public Collider(Entity owner)
 		{
@@ -33,7 +21,6 @@ namespace GXPEngine.PhysicsEngine
         {
             return false;
         }
-
         public virtual bool HitTestPoint(float x, float y)
         {
             return false;
@@ -41,19 +28,25 @@ namespace GXPEngine.PhysicsEngine
 
         internal virtual List<CollisionInfo> CheckCollisions()
         {
+            return EntityManager.Instance
+                .GetEntities()
+                .Where(other => other != owner) 
+                .Select(CheckCollision)
+                .Where(collision => collision != null)
+                .ToList();
+        }
+
+        internal virtual CollisionInfo CheckCollision(Entity other)
+        {
             return null;
         }
+
         internal virtual CollisionInfo SetCollisionTimeOfImpact(CollisionInfo collision)
         {
             return null;
         }
-        public CollisionInfo GetCollisionInfo()
+        public CollisionInfo FindEarliestCollision()
         {
-            if (owner is InteractionObject && CheckCollisions().Count > 0)
-            {
-                return CheckCollisions().OrderBy(collision => collision.timeOfImpact).ToList().First();
-            }
-
             List<CollisionInfo> collisions = CheckCollisions();
             collisions.OrderBy(collision => collision.timeOfImpact).ToList();
 
@@ -63,14 +56,6 @@ namespace GXPEngine.PhysicsEngine
                 return null;
         }
 
-        /// <summary>
-        /// Determines whether two circles overlap by calculating the distance between their centers and comparing it to the sum of their radii.
-        /// </summary>
-        /// <param name="c1">The center of the first circle.</param>
-        /// <param name="c2">The center of the second circle.</param>
-        /// <param name="r1">The radius of the first circle.</param>
-        /// <param name="r2">The radius of the second circle.</param>
-        /// <returns>True if the two circles overlap, otherwise false.</returns>
         internal bool CircleOverlap(Vec2 c1, Vec2 c2, float r1, float r2)
         {
             return (Vec2.Distance(c1, c2) < r1 + r2);
@@ -127,6 +112,99 @@ namespace GXPEngine.PhysicsEngine
             if ((minT >= 1) || (maxT <= 0)) return false;
 
             return true;
+        }
+
+
+        Vec2 RelativeVelocity(Entity otherEntity) => owner.Velocity - otherEntity.Velocity;
+        Vec2 RelativePosition(Entity otherEntity) => otherEntity.Position - owner.oldPosition;
+        bool ActiveCollision(CollisionInfo collision)
+        {
+            if (collision.other is Entity other)
+            {
+                float dot = RelativePosition(other).Dot(RelativeVelocity(other));
+                if (dot < 0) // TODO: Check if dot is smaller than 90 deg == more than 0
+                    return false;
+                return true;
+            }
+            else
+                return true;
+        }
+
+        internal virtual void ResolveCollision(CollisionInfo collision)
+        {
+            Entity other = collision.other;
+
+            if (this.IsStatic || other.collider.IsStatic || owner.childRigidBodies.Contains(other))
+                return;
+
+            if (!ActiveCollision(collision)) // Check relative velocity to prevent balls that are not on a collision course from colliding
+                return;
+
+            POICollisionResolve(collision);
+            Bounce(collision);
+            //CollisionSound(collision);
+        }
+
+        void POICollisionResolve(CollisionInfo collision)
+        {
+            owner.Position = CalculatePOI(collision.timeOfImpact);
+        }
+        public Vec2 CalculatePOI(float TOI)
+        {
+            return owner.oldPosition + TOI * owner.Velocity;
+        }
+
+        Vec2 GetCoMVelocity(CollisionInfo collision)
+        {
+            if (collision.other.collider is LineCollider)
+            {
+                return Vec2.Zero;
+            }
+            else
+            {
+                Entity other = collision.other;
+                float totalMass = owner.Mass + other.Mass;
+
+                Vec2 comVelocity = (owner.GetMomentum() + other.GetMomentum()) / totalMass;
+
+                return comVelocity;
+            }
+        }
+        
+
+        void Bounce(CollisionInfo collision)
+        {
+            Vec2 comVelocity = GetCoMVelocity(collision); // Velocity of center of mass (weighted average of velocities)
+            Vec2 normal = collision.normal;
+
+            if (collision.other.GetType() != typeof(StaticObject))
+            {
+                Entity other = collision.other;
+                CollisionOnLine(normal, comVelocity);
+                other.collider.CollisionOnLine(normal, comVelocity);
+            }
+            else
+            {
+                CollisionOnLine(normal, comVelocity);
+            }
+        }
+
+        void CollisionOnLine(Vec2 normal, Vec2 comVelocity)
+        {
+            Vec2 projectedVelocity = owner.Velocity.Project(normal);
+            Vec2 projectedCoMVelocity = comVelocity.Project(normal);
+
+            owner.Velocity = owner.Velocity - (1 + owner.bounciness) * (projectedVelocity - projectedCoMVelocity);
+        }
+
+        void CollisionSound(CollisionInfo collision)
+        {
+            //if (collision.other is LineSegment)
+            //    collisionSoundChannel = lineSegmentHit.Play(volume: Mathf.Clamp(1f * velocity.Length, 0.2f, 10f));
+            //else if (collision.other is Ball)
+            //    collisionSoundChannel = ballHit.Play(volume: 0.8f * velocity.Length);
+
+            collisionSoundChannel.Frequency = Utils.Random(41000, 49000);
         }
     } 
 }

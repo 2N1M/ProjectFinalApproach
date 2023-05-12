@@ -53,6 +53,8 @@
     <Compile Include="HUD.cs" />
     <Compile Include="LineSegment.cs" />
     <Compile Include="PhysicsEngine\BoxCollider.cs" />
+    <Compile Include="PhysicsEngine\GravityArea.cs" />
+    <Compile Include="PhysicsEngine\InsideCircleCollider.cs" />
     <Compile Include="PhysicsEngine\CircleCollider.cs" />
     <Compile Include="Entities\Coin.cs" />
     <Compile Include="PhysicsEngine\Collider.cs" />

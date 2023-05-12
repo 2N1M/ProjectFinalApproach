@@ -9,11 +9,14 @@ namespace GXPEngine.PhysicsEngine
 {
 	public class CircleCollider : Collider
 	{
-        public float Radius { get; set; }
+        public float Radius
+        {
+            get { return owner.radius; }
+        }
 
         public CircleCollider(Entity owner) : base(owner)
 		{
-            Radius = owner.radius;
+
 		}
 
         // TODO: Circle box collisions (Basically circle and 4 line segments)
@@ -38,28 +41,16 @@ namespace GXPEngine.PhysicsEngine
             }
         }
 
-        internal override List<CollisionInfo> CheckCollisions()
+        internal override CollisionInfo CheckCollision(Entity other)
         {
-            List<CollisionInfo> collisions = new List<CollisionInfo>();
-            CollisionInfo collision;
+            Vec2 difference = owner.oldPosition - other.Position;
 
-            foreach (var other in EntityManager.Instance.GetEntities())
-            {
-                if (other != owner) // Continuous collision detection 
-                {
-                    Vec2 difference = owner.oldPosition - other.Position;
+            CollisionInfo collision = new CollisionInfo(owner, other, Vec2.Zero, difference); // Normal 0 because it still has to be calculated by TOI
+            CollisionInfo updatedCollision = SetCollisionTimeOfImpact(collision);
 
-                    collision = new CollisionInfo(owner, other, Vec2.Zero, difference); // Normal 0 because it still has to be calculated by TOI
-                    CollisionInfo updatedCollision = SetCollisionTimeOfImpact(collision);
-
-                    if (!(other is InteractionObject) && updatedCollision != null)
-                        collisions.Add(updatedCollision);
-
-                    //if (HitTest(other.collider))// && owner is InteractionObject)
-                    //    collisions.Add(new CollisionInfo(owner, other, difference.Normalized(), difference));
-                }
-            }
-            return collisions;
+            if (!other.collider.IsStatic && updatedCollision != null)
+                return updatedCollision;
+            return null;
         }
 
         internal override CollisionInfo SetCollisionTimeOfImpact(CollisionInfo collision)
@@ -95,12 +86,12 @@ namespace GXPEngine.PhysicsEngine
                 float t = (-b - Mathf.Sqrt(d)) / (2 * a);
                 //float t2 = (-b + Mathf.Sqrt(d)) / (2 * a);
 
-                DrawPOICircle(owner.CalculatePOI(t));
+                DrawPOICircle(CalculatePOI(t), Radius);
                 //DrawPOICircle(owner.CalculatePOI(t2));
 
                 if (0 <= t && t < 1)
                 {
-                    collision.SetNormal((owner.CalculatePOI(t) - other.Position).Normalized());
+                    collision.SetNormal((CalculatePOI(t) - other.Position).Normalized());
                     return collision.SetTOI(t);                    
                 }
                 return null;
@@ -133,9 +124,9 @@ namespace GXPEngine.PhysicsEngine
             return null;
         }
 
-        public void DrawPOICircle(Vec2 poi)
+        public void DrawPOICircle(Vec2 poi, float radius)
         {
-            MyGame._circleCointainer.graphics.DrawEllipse(Pens.White, poi.x - Radius, poi.y - Radius, 2 * Radius, 2 * Radius);
+            MyGame._circleCointainer.graphics.DrawEllipse(Pens.White, poi.x - radius, poi.y - radius, 2 * radius, 2 * radius);
         }
     } 
 }

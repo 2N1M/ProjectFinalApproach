@@ -34,7 +34,7 @@ public class EntityManager
     List<Entity> entityList = new List<Entity>();
 
     /// <summary>
-    /// Textured CircleCollider Entity
+    /// Textured Entity
     /// </summary>
     /// <param name="texture"></param>
     /// <param name="radius"></param>
@@ -42,14 +42,14 @@ public class EntityManager
     /// <param name="rows"></param>
     /// <param name="frames"></param>
     /// <returns></returns>
-    public Entity CreateEntity(Vec2 position, Texture2D texture, int radius = -1, int cols = 1, int rows = 1, int frames = -1)
+    public Entity CreateEntity(Vec2 position, Texture2D texture, int radius = -1, int cols = 1, int rows = 1, int frames = -1, ColliderType colliderType = ColliderType.Circle)
     {
         if (radius == -1)
         {
             radius = texture.width / 2;
         }
         Entity entity = new Entity(texture, cols, rows, frames, radius);
-        entity.SetCollider(ColliderType.Circle);
+        entity.SetCollider(colliderType);
         entityList.Add(entity);
         entity.Position= position;
 
@@ -60,17 +60,23 @@ public class EntityManager
     /// </summary>
     /// <param name="pRadius"></param>
     /// <returns></returns>
-    public Entity CreateEntity(Vec2 position, int pRadius, Color? pColor = null)
+    public Entity CreateEntity(Vec2 position, int pRadius, Color? pColor = null, ColliderType colliderType = ColliderType.Circle)
     {
         Texture2D empty = new Texture2D((int)pRadius * 2, (int)pRadius * 2);
         Entity entity = new Entity(empty, radius: pRadius, color: pColor, easyDraw: true);
-        entity.SetCollider(ColliderType.Circle);
+        entity.SetCollider(colliderType);
         entityList.Add(entity);
         entity.Position= position;
 
         return entity;
-    }
+    }    
 
+
+    public void AddChild(Entity parent, Entity child)
+    {
+        child.parentRigidBody = parent;
+        //parent.childRigidBodies.Add(child);
+    }
     public void DestroyEntity(Entity entity)
     {
         entityList.Remove(entity);
@@ -115,10 +121,10 @@ public class EntityManager
         {
             stepped ^= true;
         }
-        //if (Input.GetKeyDown(Key.D))
-        //{
-        //    Ball.drawDebugLine ^= true;
-        //}
+        if (Input.GetKeyDown(Key.D))
+        {
+            RigidBody.drawDebugLine ^= true;
+        }
         //if (Input.GetKeyDown(Key.H))
         //{
         //    Ball.drawPOI ^= true;
@@ -135,10 +141,10 @@ public class EntityManager
         //{
         //    Ball.wordy ^= true;
         //}
-        //if (Input.GetKeyDown(Key.C))
-        //{
-        //    _lineContainer.graphics.Clear(Color.Transparent);
-        //}
+        if (Input.GetKeyDown(Key.C))
+        {
+            MyGame._lineContainer.graphics.Clear(Color.Transparent);
+        }
         //if (Input.GetKeyDown(Key.R))
         //{
         //    LoadScene(_startSceneNumber);

@@ -60,6 +60,12 @@ public class Entity : RigidBody
             case ColliderType.Circle:
                 collider = new CircleCollider(this);
                 break;
+            case ColliderType.InsideCircle:
+                collider = new InsideCircleCollider(this);
+                break;
+            case ColliderType.GravityArea:
+                collider = new GravityArea(this);
+                break;
             case ColliderType.Trigger:
                 break;
             default:
