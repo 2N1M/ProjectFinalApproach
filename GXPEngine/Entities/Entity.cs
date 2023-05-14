@@ -13,6 +13,12 @@ public class Entity : RigidBody
     public Color shapeColor;
     EasyDraw entityShape;
 
+    public float ShapeAlpha
+    {
+        get { return entityShape.alpha; }
+        set { entityShape.alpha = value; }
+    }
+
     public Entity(Texture2D spriteSheet = null, int cols = 1, int rows = 1, int frames = -1, int radius = 0, Color? color = null, bool easyDraw = false) : base(spriteSheet, cols, rows, frames)
     {
         entityData = new EntityData();

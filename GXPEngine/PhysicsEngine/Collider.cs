@@ -26,7 +26,7 @@ namespace GXPEngine.PhysicsEngine
             return false;
         }
 
-        internal virtual List<CollisionInfo> CheckCollisions()
+        public virtual List<CollisionInfo> CheckCollisions()
         {
             return EntityManager.Instance
                 .GetEntities()
@@ -130,19 +130,25 @@ namespace GXPEngine.PhysicsEngine
                 return true;
         }
 
-        internal virtual void ResolveCollision(CollisionInfo collision)
+        internal virtual bool ResolveCollision(CollisionInfo collision)
         {
             Entity other = collision.other;
 
             if (this.IsStatic || other.collider.IsStatic || owner.childRigidBodies.Contains(other))
-                return;
+                return false;
 
             if (!ActiveCollision(collision)) // Check relative velocity to prevent balls that are not on a collision course from colliding
-                return;
+                return false;
 
             POICollisionResolve(collision);
             Bounce(collision);
             //CollisionSound(collision);
+
+            return true;
+        }        
+        internal virtual void ResolveCollision(List<CollisionInfo> collision)
+        {
+            return;
         }
 
         void POICollisionResolve(CollisionInfo collision)
@@ -194,7 +200,7 @@ namespace GXPEngine.PhysicsEngine
             Vec2 projectedVelocity = owner.Velocity.Project(normal);
             Vec2 projectedCoMVelocity = comVelocity.Project(normal);
 
-            owner.Velocity = owner.Velocity - (1 + owner.bounciness) * (projectedVelocity - projectedCoMVelocity);
+            owner.Velocity -= (1 + owner.bounciness) * (projectedVelocity - projectedCoMVelocity);
         }
 
         void CollisionSound(CollisionInfo collision)

@@ -16,45 +16,45 @@ namespace GXPEngine.PhysicsEngine
             
 		}
 
-        internal override List<CollisionInfo> CheckCollisions()
-        {
-            List<CollisionInfo> collisions = new List<CollisionInfo>();
-            CollisionInfo collision;
+        //internal override List<CollisionInfo> CheckCollisions()
+        //{
+        //    List<CollisionInfo> collisions = new List<CollisionInfo>();
+        //    CollisionInfo collision;
 
-            foreach (var other in EntityManager.Instance.GetEntities())
-            {
-                if (other != owner) // Continuous collision detection 
-                {
-                    Vec2 difference = owner.oldPosition - other.Position;
+        //    foreach (var other in EntityManager.Instance.GetEntities())
+        //    {
+        //        if (other != owner) // Continuous collision detection 
+        //        {
+        //            Vec2 difference = owner.oldPosition - other.Position;
 
-                    Vec2 centersDifference = owner.oldPosition - other.Position;
-                    Vec2 centersDiffNormalized = centersDifference.Normalized();
-                    colliderPosition = owner.Position + (centersDiffNormalized * (this.Radius + other.radius));
+        //            Vec2 centersDifference = owner.oldPosition - other.Position;
+        //            Vec2 centersDiffNormalized = centersDifference.Normalized();
+        //            colliderPosition = owner.Position + (centersDiffNormalized * (this.Radius + other.radius));
 
-                    difference = colliderPosition - other.Position;
+        //            difference = colliderPosition - other.Position;
 
-                    //if (other.collider is CircleCollider)
-                    //{
+        //            //if (other.collider is CircleCollider)
+        //            //{
                         
-                    //    Vec2 centersDifference = owner.oldPosition - other.Position;
-                    //    Vec2 centersDiffNormalized = centersDifference.Normalized();
-                    //    colliderPosition = owner.Position + (centersDiffNormalized * (this.Radius + other.radius));
+        //            //    Vec2 centersDifference = owner.oldPosition - other.Position;
+        //            //    Vec2 centersDiffNormalized = centersDifference.Normalized();
+        //            //    colliderPosition = owner.Position + (centersDiffNormalized * (this.Radius + other.radius));
 
-                    //    difference = colliderPosition - other.Position;
-                    //}
+        //            //    difference = colliderPosition - other.Position;
+        //            //}
 
-                    collision = new CollisionInfo(owner, other, Vec2.Zero, difference); // Normal 0 because it still has to be calculated by TOI
-                    CollisionInfo updatedCollision = SetCollisionTimeOfImpact(collision);
+        //            collision = new CollisionInfo(owner, other, Vec2.Zero, difference); // Normal 0 because it still has to be calculated by TOI
+        //            CollisionInfo updatedCollision = SetCollisionTimeOfImpact(collision);
 
-                    if (!(other is InteractionObject) && updatedCollision != null)
-                        collisions.Add(updatedCollision);
+        //            if (!(other is InteractionObject) && updatedCollision != null)
+        //                collisions.Add(updatedCollision);
 
-                    //if (HitTest(other.collider))// && owner is InteractionObject)
-                    //    collisions.Add(new CollisionInfo(owner, other, difference.Normalized(), difference));
-                }
-            }
-            return collisions;
-        }
+        //            //if (HitTest(other.collider))// && owner is InteractionObject)
+        //            //    collisions.Add(new CollisionInfo(owner, other, difference.Normalized(), difference));
+        //        }
+        //    }
+        //    return collisions;
+        //}
 
         internal override CollisionInfo SetCollisionTimeOfImpact(CollisionInfo collision)
         {

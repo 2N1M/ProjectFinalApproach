@@ -26,6 +26,16 @@ namespace GXPEngine.Core
                 return new Vec2(0, 0);
             }
         }
+
+        /// <summary>
+        /// Gets the perpendicular vector on the right side of this vector.
+        /// </summary>
+        public Vec2 PerpendicularRight => new Vec2(y, 0f - x);
+
+        /// <summary>
+        /// Gets the perpendicular vector on the left side of this vector.
+        /// </summary>
+        public Vec2 PerpendicularLeft => new Vec2(0f - y, x);
         #endregion
 
         public Vec2(float pX = 0, float pY = 0)
@@ -106,6 +116,28 @@ namespace GXPEngine.Core
         public float Dot(Vec2 other)
         {
             return x * other.x + y * other.y;
+        }
+
+        /// <summary>
+        /// Calculates the cross product of two 2D vectors.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>The cross product of the two vectors.</returns>
+        public static float Cross(Vec2 a, Vec2 b)
+        {
+            return a.x * b.y - a.y * b.x;
+        }
+
+        public Vec2 PerpendicularUnit(Vec2 normal) // TODO: Better name
+        {
+            float cross = Cross(normal, this);
+            if (cross>0)
+                return normal.PerpendicularRight;
+            else if (cross<0)
+                return normal.PerpendicularLeft;
+            else 
+                return normal; // Vectors are collinear
         }
 
         /// <summary>

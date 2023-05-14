@@ -29,15 +29,19 @@ namespace GXPEngine.PhysicsEngine
 
         public int radius;
 
-        public float bounciness = 0.98f;
+        public float bounciness = 0.58f;
         public static Vec2 acceleration = new Vec2(0, 0);
-        public float frictionCoefficient = 0.02f;
+        public float surfaceFrictionCoefficient = 0.1f;
+        public float airFrictionCoefficient = 0.001f;
         private Vec2 friction;
-        public Vec2 gravityDirection;
+
+        public List<Vec2> gravityForces= new List<Vec2>();
+
         public Vec2 hitAccelaration;
 
         public Vec2 oldPosition;
         Arrow velocityIndicator;
+        Arrow gravityIndicator;
 
         internal bool easyDraw = false;
 
@@ -50,7 +54,7 @@ namespace GXPEngine.PhysicsEngine
                     case BoxCollider _:
                         return width * height * Density;
                     case CircleCollider _:
-                        return radius * radius * Density;
+                        return Mathf.PI * Mathf.Pow(radius,2) * Density;
                     default:
                         return width * height * Density;
                 }
@@ -60,14 +64,20 @@ namespace GXPEngine.PhysicsEngine
         public RigidBody(Texture2D spriteSheet, int cols = 1, int rows = 1, int frames = -1) : base(spriteSheet, cols, rows, frames)
         {
             velocityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 10);
-            childRigidBodies= new List<RigidBody>();
+            gravityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 0.2f, 0xff50ff50);
+            childRigidBodies = new List<RigidBody>();
+
             LateAddChild(velocityIndicator);
+            LateAddChild(gravityIndicator);
             SetOriginCenter();
         }
 
         public void Step()
         {
             oldPosition = Position;
+
+            gravityIndicator.startPoint = Position;
+            gravityIndicator.vector = gravityForces.Aggregate(Vec2.Zero, (acc, vec) => acc + vec);
 
             Move();
             if (easyDraw)
@@ -92,28 +102,20 @@ namespace GXPEngine.PhysicsEngine
         {
             if (collider.IsStatic)
             {
-                CollisionInfo collision = FindEarliestCollision();
-                if (collision != null)
-                {
-                    collider.ResolveCollision(collision);
-                }
-
+                collider.ResolveCollision(GetCollisions());
                 if (parentRigidBody != null)
-                {
-                    Position = parentRigidBody.Position;                    
-                }
+                    Position = parentRigidBody.Position;
                 return;
             }
 
-            friction = Velocity * frictionCoefficient;
-            Velocity += acceleration + hitAccelaration + gravityDirection;// - friction;
+            Vec2 gravityForceSum = gravityForces.Aggregate(Vec2.Zero, (acc, vec) => acc + vec);
+            acceleration = gravityForceSum / Mass;
 
-            frictionCoefficient = 0.02f;
-            gravityDirection = Vec2.Zero;
+            Velocity += acceleration + hitAccelaration;
+            gravityForces.Clear();
 
             int maxIterations = 2;
             int iterationCount = 0;
-
             while (iterationCount < maxIterations)
             {
                 iterationCount++;
@@ -121,10 +123,16 @@ namespace GXPEngine.PhysicsEngine
                 Position += Velocity;
 
                 CollisionInfo collision = FindEarliestCollision();
-                gravityDirection = Vec2.Zero; // Set gravity direction to 0 so that gravity from holes doesn't keep affecting ball after "missing" hole
+
                 if (collision != null)
                 {
-                    collider.ResolveCollision(collision);
+                    if (collider.ResolveCollision(collision))
+                    {
+                        Vec2 normalForce = gravityForceSum.Project(collision.normal);
+                        friction = Velocity.Project(Velocity.PerpendicularUnit(collision.normal)) * collision.other.surfaceFrictionCoefficient;
+                        Velocity -= ((normalForce / Mass) + friction);
+                    }
+                    
                     if (!Vec2.Approximately(collision.timeOfImpact, 0))
                         break;
                 }
@@ -134,6 +142,10 @@ namespace GXPEngine.PhysicsEngine
         CollisionInfo FindEarliestCollision()
         {
             return collider.FindEarliestCollision();
+        }
+        List<CollisionInfo> GetCollisions()
+        {
+            return collider.CheckCollisions();
         }
 
         public Vec2 GetMomentum()

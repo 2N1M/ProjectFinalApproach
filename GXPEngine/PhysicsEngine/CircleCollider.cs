@@ -86,7 +86,7 @@ namespace GXPEngine.PhysicsEngine
                 float t = (-b - Mathf.Sqrt(d)) / (2 * a);
                 //float t2 = (-b + Mathf.Sqrt(d)) / (2 * a);
 
-                DrawPOICircle(CalculatePOI(t), Radius);
+                //DrawPOICircle(CalculatePOI(t), Radius);
                 //DrawPOICircle(owner.CalculatePOI(t2));
 
                 if (0 <= t && t < 1)

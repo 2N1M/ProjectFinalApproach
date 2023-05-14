@@ -9,7 +9,7 @@ namespace GXPEngine.PhysicsEngine
 {
     internal class GravityArea : CircleCollider
     {
-        float gravitationalConstant = 800;
+        const float gravitationalConstant = 1e-3f;
         float gravitationalForce;
 
         public GravityArea(Entity owner) : base(owner)
@@ -26,34 +26,25 @@ namespace GXPEngine.PhysicsEngine
             return null;
         }
 
-        internal override void ResolveCollision(CollisionInfo collision)
+        internal override void ResolveCollision(List<CollisionInfo> collisions)
         {
-            
-            if (collision.other.collider is CircleCollider && collision.other != owner.parentRigidBody)
-            {                
-                Entity other = collision.other;
-                
-                float distance = Vec2.Distance(collision.other.Position, owner.Position);
+            foreach (var collision in collisions)
+            {
+                if (collision.other.collider is CircleCollider && collision.other != owner.parentRigidBody && collision.other.collider.GetType() != typeof(GravityArea))
+                {
+                    Entity other = collision.other;
 
-                //other.frictionCoefficient = 0.07f;
-                other.gravityDirection = GravityTowardsCenter(other, distance);
-
-                //if (other.Velocity.Length < 2 && distance < 1 && gravitationalForce > 1) // If ball has basically come to a standstill
-                //{
-                //    other.Velocity = Vec2.Zero;
-                //}
-                //else //if (distance < owner.radius) // Only if distance is smaller then the radius of the ball should the ball "fall in"
-                //{
-                //    other.frictionCoefficient = 0.07f;
-                //    other.gravityDirection = GravityTowardsCenter(other, distance);
-                //}
+                    float distance = Vec2.Distance(collision.other.Position, owner.Position);
+                    other.gravityForces.Add(GravityTowardsCenter(other, distance));
+                }
             }
         }
 
-        Vec2 GravityTowardsCenter(Entity entity, float distance)
+        Vec2 GravityTowardsCenter(Entity other, float distance)
         {
-            Vec2 gravityDirection = (owner.Position - entity.Position).Normalized();
-            gravitationalForce = gravitationalConstant / (distance * distance);
+            Vec2 gravityDirection = (owner.Position - other.Position).Normalized();
+            float temp = gravitationalConstant * owner.parentRigidBody.Mass * other.Mass;
+            gravitationalForce = (float)temp / Mathf.Pow(distance,2);
             return gravityDirection * gravitationalForce;// Mathf.Clamp(gravitationalForce, 0, 0.5f);
         }
     }
