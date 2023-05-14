@@ -29,14 +29,16 @@ namespace GXPEngine.PhysicsEngine
 
         public int radius;
 
+        public bool IsStatic { get; set; } = false;
+
         public float bounciness = 0.58f;
-        public static Vec2 acceleration = new Vec2(0, 0);
-        public float surfaceFrictionCoefficient = 0.1f;
+        public static Vec2 gravityAcceleration = new Vec2(0, 0);        
+        public float surfaceFrictionCoefficient = 0.05f;
         public float airFrictionCoefficient = 0.001f;
-        private Vec2 friction;
 
         public List<Vec2> gravityForces= new List<Vec2>();
 
+        internal Vec2 movementAccelaration = new Vec2(0, 0);
         public Vec2 hitAccelaration;
 
         public Vec2 oldPosition;
@@ -64,7 +66,7 @@ namespace GXPEngine.PhysicsEngine
         public RigidBody(Texture2D spriteSheet, int cols = 1, int rows = 1, int frames = -1) : base(spriteSheet, cols, rows, frames)
         {
             velocityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 10);
-            gravityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 0.2f, 0xff50ff50);
+            gravityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 0.001f, 0xff50ff50);
             childRigidBodies = new List<RigidBody>();
 
             LateAddChild(velocityIndicator);
@@ -76,10 +78,13 @@ namespace GXPEngine.PhysicsEngine
         {
             oldPosition = Position;
 
-            gravityIndicator.startPoint = Position;
-            gravityIndicator.vector = gravityForces.Aggregate(Vec2.Zero, (acc, vec) => acc + vec);
-
-            Move();
+            if (!IsStatic)
+            {
+                gravityIndicator.startPoint = Position;
+                gravityIndicator.vector = gravityForces.Aggregate(Vec2.Zero, (acc, vec) => acc + vec);
+                Move();
+            }
+            
             if (easyDraw)
                 DrawShape();
             ShowDebugInfo();
@@ -98,9 +103,10 @@ namespace GXPEngine.PhysicsEngine
                 ((MyGame)game).DrawLine(oldPosition, Position);
             }
         }
+
         void Move() // Movement using Euler integration
         {
-            if (collider.IsStatic)
+            if (collider.IsAttached)
             {
                 collider.ResolveCollision(GetCollisions());
                 if (parentRigidBody != null)
@@ -109,9 +115,10 @@ namespace GXPEngine.PhysicsEngine
             }
 
             Vec2 gravityForceSum = gravityForces.Aggregate(Vec2.Zero, (acc, vec) => acc + vec);
-            acceleration = gravityForceSum / Mass;
-
-            Velocity += acceleration + hitAccelaration;
+            
+            gravityAcceleration = (gravityForceSum / Mass);
+            Velocity += gravityAcceleration + movementAccelaration + hitAccelaration;
+            hitAccelaration = Vec2.Zero;
             gravityForces.Clear();
 
             int maxIterations = 2;
@@ -123,19 +130,19 @@ namespace GXPEngine.PhysicsEngine
                 Position += Velocity;
 
                 CollisionInfo collision = FindEarliestCollision();
-
-                if (collision != null)
+                if (collision != null && collider.ResolveCollision(collision))
                 {
-                    if (collider.ResolveCollision(collision))
-                    {
-                        Vec2 normalForce = gravityForceSum.Project(collision.normal);
-                        friction = Velocity.Project(Velocity.PerpendicularUnit(collision.normal)) * collision.other.surfaceFrictionCoefficient;
-                        Velocity -= ((normalForce / Mass) + friction);
-                    }
-                    
-                    if (!Vec2.Approximately(collision.timeOfImpact, 0))
+                    Vec2 normalForce = gravityForceSum.Project(collision.normal);
+                    Vec2 friction = Velocity.Project(Velocity.PerpendicularUnit(collision.normal)) * collision.other.surfaceFrictionCoefficient;
+
+                    Velocity -= ((normalForce / Mass) + friction);
+
+                    if (Vec2.Approximately(collision.timeOfImpact, 0) || normalForce != Vec2.Zero)
+                        continue;
+                    else
                         break;
                 }
+                break;
             }
         }
 

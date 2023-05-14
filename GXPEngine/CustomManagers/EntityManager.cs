@@ -50,7 +50,7 @@ public class EntityManager
         }
         Entity entity = new Entity(texture, cols, rows, frames, radius);
         entity.SetCollider(colliderType);
-        entityList.Add(entity);
+
         entity.Position= position;
 
         return entity;
@@ -65,7 +65,7 @@ public class EntityManager
         Texture2D empty = new Texture2D((int)pRadius * 2, (int)pRadius * 2);
         Entity entity = new Entity(empty, radius: pRadius, color: pColor, easyDraw: true);
         entity.SetCollider(colliderType);
-        entityList.Add(entity);
+        
         entity.Position= position;
 
         return entity;
@@ -96,7 +96,7 @@ public class EntityManager
 
     void HandleInput()
     {
-        Game.main.targetFps = Input.GetKey(Key.SPACE) ? 5 : 60;
+        //Game.main.targetFps = Input.GetKey(Key.SPACE) ? 5 : 60;
         //if (Input.GetKeyDown(Key.UP))
         //{
         //    Ball.acceleration.SetXY(0, -1);
@@ -117,11 +117,11 @@ public class EntityManager
         //{
         //    Ball.acceleration.SetXY(0, 0);
         //}
-        if (Input.GetKeyDown(Key.S))
-        {
-            stepped ^= true;
-        }
-        if (Input.GetKeyDown(Key.D))
+        //if (Input.GetKeyDown(Key.S))
+        //{
+        //    stepped ^= true;
+        //}
+        if (Input.GetKeyDown(Key.X))
         {
             RigidBody.drawDebugLine ^= true;
         }

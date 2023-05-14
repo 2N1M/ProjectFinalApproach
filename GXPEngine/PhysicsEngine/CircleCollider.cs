@@ -48,7 +48,7 @@ namespace GXPEngine.PhysicsEngine
             CollisionInfo collision = new CollisionInfo(owner, other, Vec2.Zero, difference); // Normal 0 because it still has to be calculated by TOI
             CollisionInfo updatedCollision = SetCollisionTimeOfImpact(collision);
 
-            if (!other.collider.IsStatic && updatedCollision != null)
+            if (updatedCollision != null)
                 return updatedCollision;
             return null;
         }

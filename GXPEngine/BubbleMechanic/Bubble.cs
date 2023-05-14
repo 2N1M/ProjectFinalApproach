@@ -6,16 +6,18 @@ using GXPEngine.PhysicsEngine;
 
 public class Bubble : GameObject
 {
-    public Entity Entity { get; private set; }
-	public Bubble(Vec2 position, float density, int colliderRadius, int gravityRadius, Color color, Vec2? velocity = null)
+    public Entity BubbleEntity { get; private set; }
+	public Bubble(Vec2 position, float density, int colliderRadius, int gravityRadius, Color color, bool isStatic = false, Vec2? velocity = null)
 	{
-        Entity = EntityManager.Instance.CreateEntity(position, colliderRadius, color);
-        Entity.Density = density;
-        Entity.Velocity= velocity?? Vec2.Zero;
+        BubbleEntity = EntityManager.Instance.CreateEntity(position, colliderRadius, color);
+        BubbleEntity.Density = density;
+        BubbleEntity.Velocity= velocity?? Vec2.Zero;
+        BubbleEntity.IsStatic= isStatic;
+
         Entity gravity = EntityManager.Instance.CreateEntity(position, gravityRadius, color, ColliderType.GravityArea);
         gravity.ShapeAlpha = 0.1f;
-        EntityManager.Instance.AddChild(Entity, gravity);
-        AddChild(Entity);
+        EntityManager.Instance.AddChild(BubbleEntity, gravity);
+        AddChild(BubbleEntity);
         AddChildAt(gravity, 0);
     }
 }

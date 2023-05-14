@@ -14,7 +14,7 @@ namespace GXPEngine.PhysicsEngine
 
         public GravityArea(Entity owner) : base(owner)
         {
-            IsStatic = true;
+            IsAttached = true;
         }
 
         internal override CollisionInfo CheckCollision(Entity other)

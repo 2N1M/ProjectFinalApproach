@@ -23,17 +23,26 @@ public class MyGame : Game
 
         //Texture2D texture = new Texture2D("circle.png");
         Vec2 position = new Vec2(width / 2 - 150, height / 2);
-        Bubble bubble1 = new Bubble(position, 100f, 150, 1000, Color.Orange);
+        Bubble bubble1 = new Bubble(position, 100f, 150, 800, Color.Orange, true);
         AddChild(bubble1);
 
         position = new Vec2(width / 2 + 150, height / 2);
-        Bubble bubble2 = new Bubble(position, 0.1f, 100, 400, Color.Orange, new Vec2(-1,4));
+        Bubble bubble2 = new Bubble(position, 30f, 100, 400, Color.Orange, velocity: new Vec2(-1,5));
         AddChild(bubble2);
 
-        Entity sat = EntityManager.Instance.CreateEntity(new Vec2((width / 2) + 200, height / 2 + 150), 40, Color.DarkSlateGray);
-        sat.Velocity = new Vec2(-1, 3.5f);
+        Entity sat = EntityManager.Instance.CreateEntity(new Vec2((width / 2) + 500, height / 2 + 150), 40, Color.DarkSlateGray);
+        sat.Velocity = new Vec2(-1f, -3);
         sat.Density = 0.01f;
         AddChild(sat);
+
+        position = new Vec2(width / 2 + 500, height / 2);
+        Texture2D texture = new Texture2D("Players/NewPlayer1.png");
+        Texture2D idletexture = new Texture2D("Players/NewPlayer1Idle.png");
+        Player player = new Player(idletexture, 6,5,26);
+        player.SetCollider(ColliderType.Circle);
+        player.Position = position;
+        player.Density = 0.1f;
+        AddChild(player);
     }
 
     public void DrawLine(Vec2 start, Vec2 end)

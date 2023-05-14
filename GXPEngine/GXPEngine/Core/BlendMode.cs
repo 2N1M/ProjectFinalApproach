@@ -55,6 +55,10 @@ namespace GXPEngine
 		public static readonly BlendMode FILLEMPTY = new BlendMode(
 			"Fill", () => { GL.BlendFunc(GL.ONE_MINUS_DST_ALPHA, GL.DST_ALPHA); }
 		);
+		
+		public static readonly BlendMode INVERTED = new BlendMode(
+			"Fill", () => { GL.BlendFunc(GL.ONE_MINUS_SRC_COLOR, GL.ONE_MINUS_SRC_COLOR); }
+		);
 
 		public delegate void Action();
 

@@ -10,7 +10,7 @@ namespace GXPEngine.PhysicsEngine
         internal Entity owner;
         SoundChannel collisionSoundChannel;
 
-        public bool IsStatic { get; set; } = false;
+        public bool IsAttached { get; set; } = false;
 
         public Collider(Entity owner)
 		{
@@ -30,7 +30,7 @@ namespace GXPEngine.PhysicsEngine
         {
             return EntityManager.Instance
                 .GetEntities()
-                .Where(other => other != owner) 
+                .Where(other => other != owner && !other.collider.IsAttached) 
                 .Select(CheckCollision)
                 .Where(collision => collision != null)
                 .ToList();
@@ -134,7 +134,7 @@ namespace GXPEngine.PhysicsEngine
         {
             Entity other = collision.other;
 
-            if (this.IsStatic || other.collider.IsStatic || owner.childRigidBodies.Contains(other))
+            if (this.IsAttached || other.collider.IsAttached || owner.childRigidBodies.Contains(other))
                 return false;
 
             if (!ActiveCollision(collision)) // Check relative velocity to prevent balls that are not on a collision course from colliding
@@ -183,7 +183,7 @@ namespace GXPEngine.PhysicsEngine
             Vec2 comVelocity = GetCoMVelocity(collision); // Velocity of center of mass (weighted average of velocities)
             Vec2 normal = collision.normal;
 
-            if (collision.other.GetType() != typeof(StaticObject))
+            if (!collision.other.IsStatic)
             {
                 Entity other = collision.other;
                 CollisionOnLine(normal, comVelocity);

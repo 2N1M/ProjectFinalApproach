@@ -32,7 +32,9 @@ public class Entity : RigidBody
             entityShape = new EasyDraw(radius * 2 + 1, radius * 2 + 1);
             entityShape.SetOriginCenter();
             AddChild(entityShape);
-        }        
+        }
+
+        EntityManager.Instance.GetEntities().Add(this);
     }
 
     internal override void DrawShape()
