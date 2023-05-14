@@ -7,7 +7,7 @@ using GXPEngine.PhysicsEngine;
 public class Bubble : GameObject
 {
     public Entity BubbleEntity { get; private set; }
-	public Bubble(Vec2 position, float density, int colliderRadius, int gravityRadius, Color color, bool isStatic = false, Vec2? velocity = null)
+	public Bubble(Vec2 position, float density, int colliderRadius, int gravityRadius, ColorAB color, bool isStatic = false, Vec2? velocity = null)
 	{
         BubbleEntity = EntityManager.Instance.CreateEntity(position, colliderRadius, color);
         BubbleEntity.Density = density;

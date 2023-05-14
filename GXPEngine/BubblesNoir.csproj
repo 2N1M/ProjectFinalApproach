@@ -45,6 +45,7 @@
     <Compile Include="BubbleMechanic\InsideBubble.cs" />
     <Compile Include="BubbleMechanic\OutsideBubble.cs" />
     <Compile Include="CustomManagers\AudioManager.cs" />
+    <Compile Include="Easing.cs" />
     <Compile Include="Entities\Boss.cs" />
     <Compile Include="CustomManagers\EntityManager.cs" />
     <Compile Include="CustomManagers\LevelManager.cs" />

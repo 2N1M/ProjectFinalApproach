@@ -18,6 +18,8 @@ public class EntityManager
 {
     bool stepped = false;
     bool paused = false;
+    public bool showArrows = false;
+    public bool inverted = false;
     int stepIndex = 0;
 
     public static EntityManager Instance
@@ -60,7 +62,7 @@ public class EntityManager
     /// </summary>
     /// <param name="pRadius"></param>
     /// <returns></returns>
-    public Entity CreateEntity(Vec2 position, int pRadius, Color? pColor = null, ColliderType colliderType = ColliderType.Circle)
+    public Entity CreateEntity(Vec2 position, int pRadius, ColorAB? pColor = null, ColliderType colliderType = ColliderType.Circle)
     {
         Texture2D empty = new Texture2D((int)pRadius * 2, (int)pRadius * 2);
         Entity entity = new Entity(empty, radius: pRadius, color: pColor, easyDraw: true);
@@ -124,6 +126,7 @@ public class EntityManager
         if (Input.GetKeyDown(Key.X))
         {
             RigidBody.drawDebugLine ^= true;
+            showArrows ^=true;
         }
         //if (Input.GetKeyDown(Key.H))
         //{
@@ -132,6 +135,20 @@ public class EntityManager
         if (Input.GetKeyDown(Key.P))
         {
             paused ^= true;
+        }
+        if (Input.GetKeyDown(Key.E))
+        {
+            inverted ^= true;
+
+            if (!inverted)
+            {
+                lerpColorValue = 0;
+            }
+            else
+            {
+                lerpColorValue = 1;
+            }
+            
         }
         //if (Input.GetKeyDown(Key.B))
         //{
@@ -158,9 +175,28 @@ public class EntityManager
         //}
     }
 
+    Color aColor = Color.FromArgb(198, 221, 231);
+    Color bColor = Color.FromArgb(30, 30, 30);
+
+    public Color entityAColor = Color.FromArgb(198, 221, 231);
+    public Color entityBColor = Color.FromArgb(30, 30, 30);
+
+    Easing easeColor = new Easing();
+    float lerpColorValue = 0;
+    float colorEaseValue = 0.1f;
+
+    void UpdateColors()
+    {
+        entityAColor = Utils.LerpColor(aColor, bColor, easeColor.Ease(lerpColorValue, colorEaseValue));
+        entityBColor = Utils.LerpColor(bColor, aColor, easeColor.Ease(lerpColorValue, colorEaseValue));
+
+        Game.main._glContext.SetClearColor(entityBColor);
+    }
+
     public void Step()
     {
         HandleInput();
+        UpdateColors();
 
         if (!paused)
         {

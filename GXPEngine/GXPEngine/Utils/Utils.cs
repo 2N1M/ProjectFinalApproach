@@ -14,14 +14,34 @@ namespace GXPEngine
 
 		static Dictionary<string, PrivateFontCollection> fontIndex=null;
 
-		/// <summary>
-		/// Creates a font from a font file (extension: ttf), with the given point size and font style.
-		/// </summary>
-		/// <param name="filename">The font file (should be of type .ttf)</param>
-		/// <param name="fontSize">The size in points</param>
-		/// <param name="fontStyle">The font style (pass e.g. FontStyle.Italic|FontStyle.Bold here)</param>
-		/// <returns></returns>
-		public static Font LoadFont(string filename, float fontSize, FontStyle fontStyle = FontStyle.Regular) {
+        /// <summary>
+        /// Linearly interpolates between two colors based on a given amount value.
+        /// </summary>
+        /// <param name="start">The starting color.</param>
+        /// <param name="end">The ending color.</param>
+        /// <param name="amount">A value between 0 and 1 that specifies the interpolation point. A value of 0 returns start, a value of 1 returns end, and a value in between returns a color that is interpolated between start and end.</param>
+        /// <returns>A new color that is the result of the interpolation.</returns>
+        public static Color LerpColor(Color start, Color end, float amount)
+        {
+            float clampedAmount = Mathf.Clamp(amount, 0, 1);
+
+            return Color.FromArgb(
+                (int)(start.A + (end.A - start.A) * clampedAmount),
+                (int)(start.R + (end.R - start.R) * clampedAmount),
+                (int)(start.G + (end.G - start.G) * clampedAmount),
+                (int)(start.B + (end.B - start.B) * clampedAmount)
+
+            );
+        }
+
+        /// <summary>
+        /// Creates a font from a font file (extension: ttf), with the given point size and font style.
+        /// </summary>
+        /// <param name="filename">The font file (should be of type .ttf)</param>
+        /// <param name="fontSize">The size in points</param>
+        /// <param name="fontStyle">The font style (pass e.g. FontStyle.Italic|FontStyle.Bold here)</param>
+        /// <returns></returns>
+        public static Font LoadFont(string filename, float fontSize, FontStyle fontStyle = FontStyle.Regular) {
 			if (fontIndex==null) {
 				fontIndex=new Dictionary<string, PrivateFontCollection>();
 			}

@@ -6,6 +6,11 @@ using GXPEngine;
 using GXPEngine.Core;
 using GXPEngine.PhysicsEngine;
 
+public enum ColorAB
+{
+    A,
+    B
+}
 
 public class Entity : RigidBody
 {
@@ -13,13 +18,15 @@ public class Entity : RigidBody
     public Color shapeColor;
     EasyDraw entityShape;
 
+    ColorAB entityColor = ColorAB.A;
+
     public float ShapeAlpha
     {
         get { return entityShape.alpha; }
         set { entityShape.alpha = value; }
     }
 
-    public Entity(Texture2D spriteSheet = null, int cols = 1, int rows = 1, int frames = -1, int radius = 0, Color? color = null, bool easyDraw = false) : base(spriteSheet, cols, rows, frames)
+    public Entity(Texture2D spriteSheet = null, int cols = 1, int rows = 1, int frames = -1, int radius = 0, ColorAB? color = null, bool easyDraw = false) : base(spriteSheet, cols, rows, frames)
     {
         entityData = new EntityData();
 
@@ -28,7 +35,7 @@ public class Entity : RigidBody
 
         if (easyDraw)
         {
-            shapeColor = color ?? Color.FromArgb(Utils.Random(0, 255), Utils.Random(0, 255), Utils.Random(0, 255));
+            entityColor = color ?? ColorAB.A;
             entityShape = new EasyDraw(radius * 2 + 1, radius * 2 + 1);
             entityShape.SetOriginCenter();
             AddChild(entityShape);
@@ -39,6 +46,16 @@ public class Entity : RigidBody
 
     internal override void DrawShape()
     {
+        switch (entityColor)
+        {
+            case ColorAB.A:
+                shapeColor = EntityManager.Instance.entityAColor;
+                break;
+            case ColorAB.B:
+                shapeColor = EntityManager.Instance.entityBColor;
+                break;
+        }
+
         //entityShape.ClearTransparent();
         entityShape.ShapeAlign(CenterMode.Center, CenterMode.Center);
         if (collider is CircleCollider)

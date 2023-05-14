@@ -2,6 +2,7 @@
 #define STRETCH_ON_RESIZE
 
 using System;
+using System.Drawing;
 using GXPEngine.OpenGL;
 
 namespace GXPEngine.Core {
@@ -119,10 +120,10 @@ namespace GXPEngine.Core {
 				GL.BlendFunc( GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA );
 				GL.Hint (GL.PERSPECTIVE_CORRECTION, GL.FASTEST);
 				//GL.Enable (GL.POLYGON_SMOOTH);
-				GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				GL.ClearColor(30.0f/255, 30.0f / 255, 30.0f / 255, 0.0f);
 
-				// Load the basic projection settings:
-				GL.MatrixMode(GL.PROJECTION);
+                // Load the basic projection settings:
+                GL.MatrixMode(GL.PROJECTION);
 				GL.LoadIdentity();
 
 #if STRETCH_ON_RESIZE
@@ -144,6 +145,11 @@ namespace GXPEngine.Core {
 			});
 			InitializeSoundSystem ();
 		}
+
+		public void SetClearColor(Color color)
+		{
+            GL.ClearColor((float)color.R / 255f, (float)color.G / 255f, (float)color.B / 255f, 0);
+        }
 
 		private static void InitializeSoundSystem() {
 #if USE_FMOD_AUDIO

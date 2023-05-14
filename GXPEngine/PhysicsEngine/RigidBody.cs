@@ -95,6 +95,17 @@ namespace GXPEngine.PhysicsEngine
         }
         void ShowDebugInfo()
         {
+            if (EntityManager.Instance.showArrows)
+            {
+                velocityIndicator.visible = true;
+                gravityIndicator.visible = true;
+            }
+            else
+            {
+                velocityIndicator.visible = false;
+                gravityIndicator.visible = false;
+            }
+
             velocityIndicator.startPoint = Position;
             velocityIndicator.vector = Velocity;
 
@@ -117,7 +128,9 @@ namespace GXPEngine.PhysicsEngine
             Vec2 gravityForceSum = gravityForces.Aggregate(Vec2.Zero, (acc, vec) => acc + vec);
             
             gravityAcceleration = (gravityForceSum / Mass);
-            Velocity += gravityAcceleration + movementAccelaration + hitAccelaration;
+
+            Velocity += gravityAcceleration + hitAccelaration + movementAccelaration;
+
             hitAccelaration = Vec2.Zero;
             gravityForces.Clear();
 
