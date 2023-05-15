@@ -8,7 +8,8 @@ public class MyGame : Game
 {
     public static Canvas _lineContainer = null;
     public static Canvas _circleCointainer = null;
-
+    public bool HasStarted;
+    Menu menu;
     public MyGame() : base(1920, 1080, false, pPixelArt: true)
 	{
         _lineContainer = new Canvas(width, height);
@@ -19,10 +20,29 @@ public class MyGame : Game
 
         targetFps = 60;
 
-        //LoadExampleLevel1();
-        LoadExampleLevel2();
+       // LoadExampleLevel1();
+        //
+
+        menu = new Menu();
+        AddChild(menu);
+            
+      
     }
 
+  public  void LoadLevel( )
+    {
+         if (menu.StartPressed1 == true)
+        {
+            LoadExampleLevel1();
+            HasStarted = true;
+        }
+
+        if (menu.StartPressed2 == true)
+        {
+            LoadExampleLevel2();
+            HasStarted = true;
+        }
+    }
     void LoadExampleLevel1()
     {
         Vec2 position = new Vec2(width / 2 - 260, height / 2 + 100);
@@ -52,7 +72,7 @@ public class MyGame : Game
         AddChild(player);
     }
 
-    void LoadExampleLevel2()
+  public  void LoadExampleLevel2()
     {
         //Entity hole = EntityManager.Instance.CreateEntity(new Vec2((width / 2), height / 2), 300, ColorAB.A, ColliderType.InsideCircle);
         //hole.IsStatic = true;
@@ -92,7 +112,12 @@ public class MyGame : Game
     void Update() 
 	{
 		EntityManager.Instance.Step();
-	}
+        if (!HasStarted)
+        {
+  LoadLevel();
+        }
+      
+    }
 
 	static void Main()
 	{
