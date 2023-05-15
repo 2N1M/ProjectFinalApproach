@@ -72,7 +72,7 @@ public class Entity : RigidBody
         }
     }
 
-    public void SetCollider(ColliderType colliderType)
+    public void SetCollider(ColliderType colliderType, GravityDirection gravityDirection = GravityDirection.Inwards)
     {
         switch (colliderType)
         {
@@ -89,7 +89,7 @@ public class Entity : RigidBody
                 collider = new InsideCircleCollider(this);
                 break;
             case ColliderType.GravityArea:
-                collider = new GravityArea(this);
+                collider = new GravityArea(this, gravityDirection);
                 break;
             case ColliderType.Trigger:
                 break;

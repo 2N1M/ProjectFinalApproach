@@ -1,20 +1,23 @@
 ﻿using GXPEngine.Core;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GXPEngine.PhysicsEngine
 {
+    public enum GravityDirection
+    {
+        Inwards,
+        Outwards
+    }
     internal class GravityArea : CircleCollider
     {
         const float gravitationalConstant = 1e-3f;
         float gravitationalForce;
+        public GravityDirection gravitationalDirection;
 
-        public GravityArea(Entity owner) : base(owner)
+        public GravityArea(Entity owner, GravityDirection gravitationalDirection) : base(owner)
         {
             IsAttached = true;
+            this.gravitationalDirection = gravitationalDirection;
         }
 
         internal override CollisionInfo CheckCollision(Entity other)
@@ -35,14 +38,32 @@ namespace GXPEngine.PhysicsEngine
                     Entity other = collision.other;
 
                     float distance = Vec2.Distance(collision.other.Position, owner.Position);
-                    other.gravityForces.Add(GravityTowardsCenter(other, distance));
+
+                    if (gravitationalDirection is GravityDirection.Inwards)
+                    {
+                        other.gravityForces.Add(GravityInwards(other, distance));
+                    }
+                    else
+                    {
+                        other.gravityForces.Add(GravityOutwards(other, distance));
+                    }
+                    
                 }
             }
         }
 
-        Vec2 GravityTowardsCenter(Entity other, float distance)
+        Vec2 GravityInwards(Entity other, float distance)
         {
             Vec2 gravityDirection = (owner.Position - other.Position).Normalized();
+            float temp = gravitationalConstant * owner.parentRigidBody.Mass * other.Mass;
+            gravitationalForce = (float)temp / Mathf.Pow(distance,2);
+            return gravityDirection * gravitationalForce;// Mathf.Clamp(gravitationalForce, 0, 0.5f);
+        }
+        
+        Vec2 GravityOutwards(Entity other, float distance)
+        {
+            Vec2 gravityDirection = (other.Position - owner.Position).Normalized();
+
             float temp = gravitationalConstant * owner.parentRigidBody.Mass * other.Mass;
             gravitationalForce = (float)temp / Mathf.Pow(distance,2);
             return gravityDirection * gravitationalForce;// Mathf.Clamp(gravitationalForce, 0, 0.5f);
