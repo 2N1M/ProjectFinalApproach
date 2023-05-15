@@ -45,6 +45,13 @@ public class MyGame : Game
         player.Position = position;
         player.Density = 0.1f;
         AddChild(player);
+
+  
+
+        HUD hud = new HUD();
+        AddChild(hud);
+
+
     }
 
     public void DrawLine(Vec2 start, Vec2 end)
