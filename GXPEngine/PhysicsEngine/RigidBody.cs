@@ -25,14 +25,12 @@ namespace GXPEngine.PhysicsEngine
 
         public new Collider collider;
 
-        public static bool drawDebugLine = false;
-
         public int radius;
 
         public bool IsStatic { get; set; } = false;
 
         public float bounciness = 0.58f;
-        public static Vec2 gravityAcceleration = new Vec2(0, 0);        
+        public Vec2 gravityAcceleration = new Vec2(0, 0);        
         public float surfaceFrictionCoefficient = 0.05f;
         public float airFrictionCoefficient = 0.001f;
 
@@ -42,8 +40,9 @@ namespace GXPEngine.PhysicsEngine
         public Vec2 hitAccelaration;
 
         public Vec2 oldPosition;
-        Arrow velocityIndicator;
-        Arrow gravityIndicator;
+
+        DebugArrow velocityIndicator;
+        DebugArrow gravityIndicator;
 
         internal bool easyDraw = false;
 
@@ -65,8 +64,8 @@ namespace GXPEngine.PhysicsEngine
 
         public RigidBody(Texture2D spriteSheet, int cols = 1, int rows = 1, int frames = -1) : base(spriteSheet, cols, rows, frames)
         {
-            velocityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 10);
-            gravityIndicator = new Arrow(Vec2.Zero, Vec2.Zero, 0.001f, 0xff50ff50);
+            velocityIndicator = new DebugArrow(Vec2.Zero, Vec2.Zero, 10);
+            gravityIndicator = new DebugArrow(Vec2.Zero, Vec2.Zero, 0.001f, 0xff50ff50);
             childRigidBodies = new List<RigidBody>();
 
             LateAddChild(velocityIndicator);
@@ -95,7 +94,7 @@ namespace GXPEngine.PhysicsEngine
         }
         void ShowDebugInfo()
         {
-            if (EntityManager.Instance.showArrows)
+            if (EntityManager.Instance.showDebugElements)
             {
                 velocityIndicator.visible = true;
                 gravityIndicator.visible = true;
@@ -109,7 +108,7 @@ namespace GXPEngine.PhysicsEngine
             velocityIndicator.startPoint = Position;
             velocityIndicator.vector = Velocity;
 
-            if (drawDebugLine)
+            if (EntityManager.Instance.showDebugElements)
             {
                 ((MyGame)game).DrawLine(oldPosition, Position);
             }

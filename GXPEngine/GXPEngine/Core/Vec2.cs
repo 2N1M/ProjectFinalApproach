@@ -18,6 +18,7 @@ namespace GXPEngine.Core
         /// Gets the length (magnitude) of the Vec2.
         /// </summary>
         public float Length => Mathf.Sqrt(x * x + y * y);
+        public float LengthSquared => Mathf.Pow(Mathf.Sqrt(x * x + y * y),2);
 
         public static Vec2 Zero
         {

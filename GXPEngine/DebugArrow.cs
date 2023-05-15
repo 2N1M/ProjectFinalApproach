@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GXPEngine
 {
-    public class Arrow : GameObject
+    public class DebugArrow : GameObject
     {
         public Vec2 startPoint;
         public Vec2 vector;
@@ -17,7 +17,7 @@ namespace GXPEngine
         public uint color = 0xffffffff;
         public uint lineWidth = 1;
 
-        public Arrow(Vec2 pStartPoint, Vec2 pVector, float pScale, uint pColor = 0xffffffff, uint pLineWidth = 1)
+        public DebugArrow(Vec2 pStartPoint, Vec2 pVector, float pScale, uint pColor = 0xffffffff, uint pLineWidth = 1)
         {
             startPoint = pStartPoint;
             vector = pVector;

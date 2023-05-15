@@ -119,8 +119,9 @@ namespace GXPEngine.PhysicsEngine
         Vec2 RelativePosition(Entity otherEntity) => otherEntity.Position - owner.oldPosition;
         bool ActiveCollision(CollisionInfo collision)
         {
-            if (collision.other is Entity other)
+            if (collision.other.collider.GetType() == typeof(CircleCollider))
             {
+                Entity other = collision.other;
                 float dot = RelativePosition(other).Dot(RelativeVelocity(other));
                 if (dot < 0) // TODO: Check if dot is smaller than 90 deg == more than 0
                     return false;
@@ -211,6 +212,18 @@ namespace GXPEngine.PhysicsEngine
             //    collisionSoundChannel = ballHit.Play(volume: 0.8f * velocity.Length);
 
             collisionSoundChannel.Frequency = Utils.Random(41000, 49000);
+        }
+
+        public (float t1, float t2)? SolveQuadraticEquation(float a, float b, float c)
+        {
+            float d = Mathf.Pow(b, 2) - (4 * a * c); // Discriminant
+            if (d < 0)
+                return null;
+
+            float t1 = (-b - Mathf.Sqrt(d)) / (2 * a);
+            float t2 = (-b + Mathf.Sqrt(d)) / (2 * a);
+
+            return (t1, t2);
         }
     } 
 }

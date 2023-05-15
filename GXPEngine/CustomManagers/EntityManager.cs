@@ -18,7 +18,7 @@ public class EntityManager
 {
     bool stepped = false;
     bool paused = false;
-    public bool showArrows = false;
+    public bool showDebugElements = false;
     public bool inverted = false;
     int stepIndex = 0;
 
@@ -62,16 +62,16 @@ public class EntityManager
     /// </summary>
     /// <param name="pRadius"></param>
     /// <returns></returns>
-    public Entity CreateEntity(Vec2 position, int pRadius, ColorAB? pColor = null, ColliderType colliderType = ColliderType.Circle)
+    public Entity CreateEntity(Vec2 position, int pRadius, ColorAB? pColor = null, ColliderType colliderType = ColliderType.Circle, GravityDirection gravityDirection = GravityDirection.Inwards)
     {
         Texture2D empty = new Texture2D((int)pRadius * 2, (int)pRadius * 2);
         Entity entity = new Entity(empty, radius: pRadius, color: pColor, easyDraw: true);
-        entity.SetCollider(colliderType);
+        entity.SetCollider(colliderType, gravityDirection);
         
         entity.Position= position;
 
         return entity;
-    }    
+    }
 
 
     public void AddChild(Entity parent, Entity child)
@@ -125,8 +125,7 @@ public class EntityManager
         //}
         if (Input.GetKeyDown(Key.X))
         {
-            RigidBody.drawDebugLine ^= true;
-            showArrows ^=true;
+            showDebugElements ^=true;
         }
         //if (Input.GetKeyDown(Key.H))
         //{

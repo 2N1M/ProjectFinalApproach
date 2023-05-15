@@ -40,7 +40,7 @@ namespace GXPEngine.PhysicsEngine
                 return false;
             }
         }
-
+        
         internal override CollisionInfo CheckCollision(Entity other)
         {
             Vec2 difference = owner.oldPosition - other.Position;
@@ -55,7 +55,7 @@ namespace GXPEngine.PhysicsEngine
 
         internal override CollisionInfo SetCollisionTimeOfImpact(CollisionInfo collision)
         {
-            if (collision.other.collider is CircleCollider)
+            if (collision.other.collider.GetType() == typeof(CircleCollider))
             {
                 Entity other = collision.other;
 
@@ -77,22 +77,64 @@ namespace GXPEngine.PhysicsEngine
                     else
                         return null;
 
-                float d = Mathf.Pow(b, 2) - (4 * a * c); // Discriminant
-                if (d < 0)
+                //Console.WriteLine("a: {0}, \nb: {1}, \nc: {2}, \n ", a, b, c);
+
+                (float t1, float t2) solutions;
+                if (SolveQuadraticEquation(a, b, c) == null)
                     return null;
+                else
+                    solutions = ((float t1, float t2))SolveQuadraticEquation(a, b, c);
 
-                //Console.WriteLine("a: {0}, \nb: {1}, \nc: {2}, \nd: {3} \n ", a, b, c, d);
-
-                float t = (-b - Mathf.Sqrt(d)) / (2 * a);
-                //float t2 = (-b + Mathf.Sqrt(d)) / (2 * a);
-
-                //DrawPOICircle(CalculatePOI(t), Radius);
-                //DrawPOICircle(owner.CalculatePOI(t2));
-
-                if (0 <= t && t < 1)
+                if (EntityManager.Instance.showDebugElements)
                 {
-                    collision.SetNormal((CalculatePOI(t) - other.Position).Normalized());
-                    return collision.SetTOI(t);                    
+                    DrawPOICircle(CalculatePOI(solutions.t1), Radius);
+                    DrawPOICircle(CalculatePOI(solutions.t2), Radius);
+                }
+
+                if (0 <= solutions.t1 && solutions.t1 < 1)
+                {
+                    collision.SetNormal((CalculatePOI(solutions.t1) - other.Position).Normalized());
+                    return collision.SetTOI(solutions.t1);
+                }
+                return null;
+            }
+            else if (collision.other.collider.GetType() == typeof(InsideCircleCollider))
+            {
+                Entity other = collision.other;
+
+                Vec2 relativeVelocity = owner.Velocity - other.Velocity;
+                float a = relativeVelocity.LengthSquared;
+
+                Vec2 relativePosition = owner.oldPosition - other.Position;
+                float b = 2 * relativePosition.Dot(relativeVelocity);
+                float c = relativePosition.LengthSquared - Mathf.Pow(other.radius - Radius, 2);
+
+                //if (c < 0)
+                //    if (b < 0)
+                //    {
+                //        collision.SetNormal(relativePosition.Normalized());
+                //        return collision.SetTOI(0);
+                //    }
+                //    else
+                //        return null;
+                //Console.WriteLine("a: {0}, \nb: {1}, \nc: {2}, \n ", a, b, c);
+
+                (float t1, float t2) solutions;
+                if (SolveQuadraticEquation(a, b, c) == null)
+                    return null;
+                else
+                    solutions = ((float t1, float t2))SolveQuadraticEquation(a, b, c);
+
+                if (EntityManager.Instance.showDebugElements)
+                {
+                    DrawPOICircle(CalculatePOI(solutions.t1), Radius);
+                    DrawPOICircle(CalculatePOI(solutions.t2), Radius);
+                }
+
+                if (0 <= solutions.t2 && solutions.t2 < 1)
+                {
+                    collision.SetNormal((CalculatePOI(solutions.t2) - other.Position).Normalized());
+                    return collision.SetTOI(solutions.t2);
                 }
                 return null;
             }
@@ -126,6 +168,7 @@ namespace GXPEngine.PhysicsEngine
 
         public void DrawPOICircle(Vec2 poi, float radius)
         {
+            Game.main.SetChildIndex(MyGame._circleCointainer, Game.main.GetChildCount());
             MyGame._circleCointainer.graphics.DrawEllipse(Pens.White, poi.x - radius, poi.y - radius, 2 * radius, 2 * radius);
         }
     } 

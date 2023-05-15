@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arrow.cs" />
+    <Compile Include="DebugArrow.cs" />
     <Compile Include="BubbleMechanic\GravityArea.cs" />
     <Compile Include="BubbleMechanic\InsideBubble.cs" />
     <Compile Include="BubbleMechanic\OutsideBubble.cs" />

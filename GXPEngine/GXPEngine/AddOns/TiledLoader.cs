@@ -170,8 +170,7 @@ namespace TiledMapParser {
 		public static EasyDraw CreateTextField(TiledObject obj, bool addCollider = true, bool highQualityText = true) {
 			float scaleMultiplier = highQualityText ? 2 : 1; // 1=as is. 2=better antialiasing, but 4 x size
 			EasyDraw message = new EasyDraw((int)Mathf.Ceiling(obj.Width * scaleMultiplier), (int)Mathf.Ceiling(obj.Height * scaleMultiplier), addCollider);
-			// TODO: Cache fonts?
-
+			
 			// Set Font:
 			FontStyle f = FontStyle.Regular;
 			if (obj.textField.bold == 1 && obj.textField.italic == 1) {
